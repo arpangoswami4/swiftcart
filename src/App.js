@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Store from "./components/Store";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import Admin from "./components/Admin";
 
 function App() {
   const router = createBrowserRouter([
@@ -15,6 +16,7 @@ function App() {
       children: [
         { index: true, element: <Home /> },
         { path: "/store", element: <Store /> },
+        { path: "/admin", element: <Admin /> },
       ],
     },
     {

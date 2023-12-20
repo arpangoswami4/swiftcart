@@ -20,7 +20,7 @@ const UserLayout = () => {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col">
       <header className="py-4 px-12 bg-green-100">
         <nav className="flex justify-between ">
           <div>
@@ -48,6 +48,19 @@ const UserLayout = () => {
                   to="store"
                 >
                   Store
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-yellow-900 p-1.5 rounded-lg bg-blue-200"
+                      : "p-1.5"
+                  }
+                  to="/admin"
+                  end
+                >
+                  Admin
                 </NavLink>
               </li>
             </ul>
