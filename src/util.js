@@ -29,23 +29,27 @@ export const getUsers = async () => {
   return data;
 };
 
+export const authenticateUser = (formData, usersData) => {
+  let val = usersData.findIndex(
+    (userData) =>
+      userData.email === formData.email &&
+      userData.password === formData.password
+  );
+  return val;
+};
+
+
 export const getClothes = async () => {
   const response = await fetch(
     "https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes.json"
   );
   let data = await response.json();
-  const dataArray=[]
-  for(const data1 in data){
-    for(const key in data[data1]){
-      dataArray.push(data[data1][key]);
-    }
-  }
-  return dataArray;
+  data = Object.keys(data).map((key) => data[key]);
+  return data;
 };
 
-
 export const deleteCloth = async (id) => {
-  const response = await fetch(
+  await fetch(
     `https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes/${id}.json`,
     {
       method: "DELETE",
@@ -53,20 +57,11 @@ export const deleteCloth = async (id) => {
   );
 };
 
-
-
-export const authenticateUser = (formData,usersData) => {
-  let val = usersData.findIndex((userData)=> userData.email===formData.email && userData.password===formData.password)
-  return val;
-};
-
-
-export const createCloth = (data) => {
+export const updateCloth = (data,id) => {
   const response = fetch(
-    `https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes/${data.id}.json`,
+    `https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes/${id}.json`,
     {
-      mode: "no-cors",
-      method: "POST",
+      method: "PATCH",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -74,14 +69,19 @@ export const createCloth = (data) => {
       body: JSON.stringify(data),
     }
   )
-    .then((response) => {
-      return response;
-    })
-    .catch((response) => {
-      return response;
-    });
-  return response;
 };
 
 
-
+export const createCloth = async (data) => {
+  fetch(
+    `https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes/${data.id}.json`,
+    {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  )  
+};

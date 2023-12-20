@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { createCloth, deleteCloth, getClothes } from "../../util";
+import { createCloth, deleteCloth, getClothes, updateCloth } from "../../util";
 
 export const createClothAction = createAsyncThunk(
   "store/create",
@@ -9,6 +9,18 @@ export const createClothAction = createAsyncThunk(
       data = { ...data, id: Math.random().toString(16).slice(2) };
       await createCloth(data);
       return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateClothAction = createAsyncThunk(
+  "store/update",
+  async ({data,id}, { rejectWithValue }) => {
+    try {
+      await updateCloth(data,id);
+      return {data,id};
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -27,7 +39,6 @@ export const getClothAction = createAsyncThunk(
   }
 );
 
-
 export const deleteClothAction = createAsyncThunk(
   "store/delete",
   async (id, { rejectWithValue }) => {
@@ -35,7 +46,6 @@ export const deleteClothAction = createAsyncThunk(
       await deleteCloth(id);
       return id;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }

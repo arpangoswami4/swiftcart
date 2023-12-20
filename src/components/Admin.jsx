@@ -17,6 +17,7 @@ const Admin = () => {
               price={item.clothPrice}
               // imageURL={item.imageURL}
               id={item.id}
+              isAdmin={true}
             />
           );
         })}

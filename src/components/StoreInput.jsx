@@ -45,7 +45,6 @@ const StoreInput = () => {
               }}
             />
             <Input
-              required={true}
               type="url"
               name="imageURL"
               label="Image URL"

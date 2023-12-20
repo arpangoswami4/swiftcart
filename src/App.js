@@ -7,12 +7,14 @@ import Store from "./components/Store";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Admin from "./components/Admin";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <UserLayout />,
+      errorElement: <ErrorPage />,
       children: [
         { index: true, element: <Home /> },
         { path: "/store", element: <Store /> },

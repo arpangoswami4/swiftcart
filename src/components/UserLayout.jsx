@@ -2,13 +2,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { userActions } from "../store/slices/userSlice";
+import { json } from "react-router-dom";
 
 const UserLayout = () => {
   const userData = useSelector((state) => state.userData);
   const [showDropdown, setShowDropdown] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  if(!userData.loggedIn){
+    throw new json({message: 'Please Login or Sign-up to continue'},{status: 401});
+  }
   function handleUserMenu() {
     setShowDropdown((showDropdown) => !showDropdown);
   }
