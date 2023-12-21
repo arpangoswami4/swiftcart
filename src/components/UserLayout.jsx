@@ -1,23 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { userActions } from "../store/slices/userSlice";
 import { json } from "react-router-dom";
+import {
+  getAuthAction,
+  logoutUserAction,
+} from "../store/thunkActions/userThunk";
 
 const UserLayout = () => {
-  const userData = useSelector((state) => state.userData);
+  const authData = useSelector((state) => state.authData);
   const [showDropdown, setShowDropdown] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  if(!userData.loggedIn){
-    throw new json({message: 'Please Login or Sign-up to continue'},{status: 401});
+
+  useEffect(() => {
+    dispatch(getAuthAction());
+  }, [dispatch]);
+
+  if (!authData.loggedIn) {
+    throw new json(
+      { message: "Please Login or Sign-up to continue" },
+      { status: 401 }
+    );
   }
   function handleUserMenu() {
     setShowDropdown((showDropdown) => !showDropdown);
   }
 
   function onLogout() {
-    dispatch(userActions.logout());
+    dispatch(logoutUserAction());
     setShowDropdown((showDropdown) => !showDropdown);
     navigate("/login");
   }
@@ -69,7 +80,7 @@ const UserLayout = () => {
             </ul>
           </div>
           <div className="text-red-400">
-            <button onClick={handleUserMenu}>{userData.userName}</button>
+            <button onClick={handleUserMenu}>{authData.userName}</button>
             {showDropdown && (
               <div className="text-center absolute top-11 right-2 z-20 w-48 rounded-md border bg-white shadow-2xl">
                 <ul className="flex flex-col gap-2 m-2">

@@ -1,26 +1,31 @@
-export const createUser = (data) => {
-  const response = fetch(
-    "https://swiftcart-3c77e-default-rtdb.firebaseio.com/users.json",
+export const createUser = async (data) => {
+  fetch(
+    `https://swiftcart-3c77e-default-rtdb.firebaseio.com/users/${data.id}.json`,
     {
-      mode: "no-cors",
-      method: "POST",
+      method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     }
-  )
-    .then((response) => {
-      return response;
-    })
-    .catch((response) => {
-      return response;
-    });
-  return response;
+  );
+  const authData = { loggedIn: true, userName: data.userName, userId: data.userId };
+  setAuthUser(authData);
 };
 
-export const getUsers = async () => {
+export const setAuthUser = async (authData) => {
+  fetch(`https://swiftcart-3c77e-default-rtdb.firebaseio.com/auth.json`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(authData),
+  });
+};
+
+const getUsers = async () => {
   const response = await fetch(
     "https://swiftcart-3c77e-default-rtdb.firebaseio.com/users.json"
   );
@@ -29,15 +34,22 @@ export const getUsers = async () => {
   return data;
 };
 
-export const authenticateUser = (formData, usersData) => {
+export const authenticateUser = async (data) => {
+  let usersData = await getUsers();
   let val = usersData.findIndex(
     (userData) =>
-      userData.email === formData.email &&
-      userData.password === formData.password
+      userData.userEmail === data.userEmail && userData.userPassword === data.userPassword
   );
-  return val;
+  const userData = usersData[val];
+  if (userData) {
+    const authData = { loggedIn: true, userName: userData.userName, userId: userData.userId };
+    setAuthUser(authData);
+  }
+  else{
+    throw Error("Invalid Login");
+  }
+  return userData;
 };
-
 
 export const getClothes = async () => {
   const response = await fetch(
@@ -48,6 +60,16 @@ export const getClothes = async () => {
   return data;
 };
 
+
+export const getAuth = async () => {
+  const response = await fetch(
+    "https://swiftcart-3c77e-default-rtdb.firebaseio.com/auth.json"
+  );
+  let data = await response.json();
+  return data;
+};
+
+
 export const deleteCloth = async (id) => {
   await fetch(
     `https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes/${id}.json`,
@@ -57,7 +79,7 @@ export const deleteCloth = async (id) => {
   );
 };
 
-export const updateCloth = (data,id) => {
+export const updateCloth = (data, id) => {
   const response = fetch(
     `https://swiftcart-3c77e-default-rtdb.firebaseio.com/clothes/${id}.json`,
     {
@@ -68,9 +90,8 @@ export const updateCloth = (data,id) => {
       },
       body: JSON.stringify(data),
     }
-  )
+  );
 };
-
 
 export const createCloth = async (data) => {
   fetch(
@@ -83,5 +104,5 @@ export const createCloth = async (data) => {
       },
       body: JSON.stringify(data),
     }
-  )  
+  );
 };
