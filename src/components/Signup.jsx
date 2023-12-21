@@ -1,21 +1,20 @@
 import { useState } from "react";
 import Input from "./Input";
 import { Link, useNavigate } from "react-router-dom";
-import { createUser } from "../util";
-import { userActions } from "../store/slices/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createUserAction } from "../store/thunkActions/userThunk";
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { loggedIn } = useSelector((state) => state.authData);
+  if (loggedIn) {
+    navigate("/");
+  }
   function handleSubmit(event) {
     event.preventDefault();
-    createUser(formData).then(() => {
-      dispatch(userActions.setUser(formData));
-      navigate("/");
-    });
+    dispatch(createUserAction(formData));
   }
 
   function onChangeInput(identifier, value) {
@@ -31,28 +30,28 @@ const Signup = () => {
           <Input
             required={true}
             type="text"
-            name="name"
+            name="userName"
             label="Name"
             onChange={(event) => {
-              onChangeInput("name", event.target.value);
+              onChangeInput("userName", event.target.value);
             }}
           />
           <Input
             required={true}
             type="email"
-            name="email"
+            name="userEmail"
             label="Email"
             onChange={(event) => {
-              onChangeInput("email", event.target.value);
+              onChangeInput("userEmail", event.target.value);
             }}
           />
           <Input
             required={true}
             type="password"
-            name="password"
+            name="userPassword"
             label="Password"
             onChange={(event) => {
-              onChangeInput("password", event.target.value);
+              onChangeInput("userPassword", event.target.value);
             }}
           />
           <button className="mt-4 p-2 mx-16 rounded-lg bg-red-300">
